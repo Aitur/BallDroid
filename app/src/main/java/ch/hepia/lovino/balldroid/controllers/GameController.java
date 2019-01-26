@@ -11,10 +11,12 @@ import android.hardware.SensorManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 import ch.hepia.lovino.balldroid.GameActivity;
 import ch.hepia.lovino.balldroid.models.Ball;
@@ -116,9 +118,15 @@ public class GameController {
                     builder.setCancelable(false);
                     alert = builder.create();
                     alert.show();
+                    CountDownTimer countDownTimer = new CountDownTimer(3 * 1000, 1000) {
+                        public void onTick(long millisUntilFinished) {
+                        }
 
-
-                    alert.dismiss();
+                        public void onFinish() {
+                            alert.dismiss();
+                        }
+                    };
+                    countDownTimer.start();
                 }
             });
         }
