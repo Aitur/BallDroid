@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">HöfflichkeitsDroid</string>
-    <string name="welcomeTitle">Howdy Partner, ich bin HöfflichkeitsDroid</string>
-    <string name="start_game">Start Game</string>
+    <string name="app_name">CarDroid</string>
+    <string name="welcomeTitle">Ich bin CarDroid!</string>
+    <string name="start_game">Einparken</string>
     <string name="high_scores">High Scores</string>
     <string name="difficulty_easy">Easy</string>
     <string name="difficulty_medium">Medium</string>
