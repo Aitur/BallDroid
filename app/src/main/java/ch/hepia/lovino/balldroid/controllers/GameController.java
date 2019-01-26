@@ -53,6 +53,7 @@ public class GameController {
     int sampleRateInHz = 44100;
     int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     int audioFormat = AudioFormat.ENCODING_PCM_FLOAT;
+    private int counter = 0;
 
     int minBufferSize = AudioRecord.getMinBufferSize(sampleRateInHz,channelConfig,audioFormat);
 
@@ -105,30 +106,49 @@ public class GameController {
             xAccel = 20;
         }
         if(mean > 0.15) {
-            xAccel = 30;
-            //System.out.println("Das ist zu laut");
+            recorder.stop();
 
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog alert;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Zu laut");
-                    builder.setMessage("Bitte nicht Stressen");
-                    builder.setCancelable(false);
-                    alert = builder.create();
-                    alert.show();
-                    CountDownTimer countDownTimer = new CountDownTimer(3 * 1000, 1000) {
-                        public void onTick(long millisUntilFinished) {
-                        }
+            if(counter < 3)
+            {
+                context.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog alert;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Zu laut");
+                        builder.setMessage("Bitte nicht Stressen");
+                        builder.setCancelable(false);
+                        alert = builder.create();
+                        alert.show();
+                        CountDownTimer countDownTimer = new CountDownTimer(3 * 1000, 1000) {
+                            public void onTick(long millisUntilFinished) {
+                            }
 
-                        public void onFinish() {
-                            alert.dismiss();
-                        }
-                    };
-                    countDownTimer.start();
-                }
-            });
+                            public void onFinish() {
+                                alert.dismiss();
+                                recorder.startRecording();
+                                counter++;
+                            }
+                        };
+                        countDownTimer.start();
+                    }
+                });
+            }
+            else{
+                context.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog alert;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Geh weg!");
+                        builder.setMessage("Ich habe die Nase voll!");
+                        builder.setCancelable(false);
+                        alert = builder.create();
+                        recorder.stop();
+                        alert.show();
+                    }
+                });
+            }
         }
     }
 
