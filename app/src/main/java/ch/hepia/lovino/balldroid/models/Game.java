@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Game {
-    private final Ball ball;
+    private final Car car;
     private final Score score;
     private final Time time;
     //We use a linkedlist so we can addFirst everything but the ball, so the ball is always the last thing rendered
@@ -37,7 +37,7 @@ public class Game {
     private final static int INFOS_DISTANCE_FROM_RIGHT = 400;
 
     public Game(DifficultyLevel difficulty, int initialScore, int initialTime, int screenWidth, int screenHeight) {
-        this.ball = new Ball(difficulty);
+        this.car = new Car(difficulty);
         this.score = new Score(screenWidth - INFOS_DISTANCE_FROM_RIGHT, initialScore);
         this.time = new Time(screenWidth - INFOS_DISTANCE_FROM_RIGHT, initialTime);
         this.screenWidth = screenWidth;
@@ -46,7 +46,7 @@ public class Game {
         this.platforms = new ArrayList<>();
         this.pointsAreas = new ArrayList<>();
         this.bonuses = new ArrayList<>();
-        this.objects.add(ball);
+        this.objects.add(car);
         //this.objects.addFirst(score);
         //this.objects.addFirst(time);
         this.rnd = new Random();
@@ -55,8 +55,8 @@ public class Game {
         //generateBonuses();
     }
 
-    public Ball getBall() {
-        return ball;
+    public Car getCar() {
+        return car;
     }
 
     public Score getScore() {

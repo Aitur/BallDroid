@@ -20,6 +20,7 @@ import ch.hepia.lovino.balldroid.GameActivity;
 import ch.hepia.lovino.balldroid.models.Ball;
 import ch.hepia.lovino.balldroid.models.BallDirection;
 import ch.hepia.lovino.balldroid.models.Bonus;
+import ch.hepia.lovino.balldroid.models.Car;
 import ch.hepia.lovino.balldroid.models.DifficultyLevel;
 import ch.hepia.lovino.balldroid.models.Game;
 import ch.hepia.lovino.balldroid.models.Platform;
@@ -40,7 +41,7 @@ public class GameController {
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Game game;
-    private Ball ball;
+    private ch.hepia.lovino.balldroid.models.Car Car;
     private Score score;
     private Time time;
     private boolean paused = true;
@@ -101,23 +102,8 @@ public class GameController {
         if(mean > 0.06){
             xAccel = 20;
         }
-        if(mean > 0.15){
-            xAccel = 30;
-            //System.out.println("Das ist zu laut");
-
-            context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog alert;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Zu laut");
-                    builder.setMessage("Bitte nicht Stressen");
-                    builder.setCancelable(false);
-                    alert = builder.create();
-                    alert.show();
-                    alert.dismiss();
-                }
-            });
+        if(mean > 0.15) {
+            xAccel = 0;
         }
     }
 
@@ -125,48 +111,48 @@ public class GameController {
         if (paused) return;
         //this.time.setTimeRemaining((int) timer.getRemainingTime() / 1000);
         updateOnVoice();
-        this.ball.incrementSpeedX(xAccel);
-        this.ball.incrementSpeedY();
-        this.ball.updatePosition();
-        if (this.ball.getX() > (this.view.getSurfaceWidth() - this.ball.getRadius())) {
-            this.ball.setX(this.view.getSurfaceWidth() - this.ball.getRadius());
-            this.ball.reboundX();
+        this.Car.incrementSpeedX(xAccel);
+        this.Car.incrementSpeedY();
+        this.Car.updatePosition();
+        if (this.Car.getX() > (this.view.getSurfaceWidth() - this.Car.getRadius())) {
+            this.Car.setX(this.view.getSurfaceWidth() - this.Car.getRadius());
+            this.Car.reboundX();
         }
-        if (this.ball.getX() < this.ball.getRadius()) {
-            this.ball.setX(this.ball.getRadius());
-            this.ball.reboundX();
+        if (this.Car.getX() < this.Car.getRadius()) {
+            this.Car.setX(this.Car.getRadius());
+            this.Car.reboundX();
         }
-        BallDirection direction = ball.getDirection();
+        BallDirection direction = Car.getDirection();
         for (Platform p : this.game.getPlatforms()) {
-            if (ball.getBoundingRect().intersect(p.getBoundingRect())) {
+            if (Car.getBoundingRect().intersect(p.getBoundingRect())) {
                 switch (direction) {
                     case N:
-                        reboundBottom(ball, p);
+                        reboundBottom(Car, p);
                         break;
                     case NE:
-                        reboundBottom(ball, p);
-                        reboundLeft(ball, p);
+                        reboundBottom(Car, p);
+                        reboundLeft(Car, p);
                         break;
                     case E:
-                        reboundLeft(ball, p);
+                        reboundLeft(Car, p);
                         break;
                     case SE:
-                        reboundTop(ball, p);
-                        reboundLeft(ball, p);
+                        reboundTop(Car, p);
+                        reboundLeft(Car, p);
                         break;
                     case S:
-                        reboundTop(ball, p);
+                        reboundTop(Car, p);
                         break;
                     case SW:
-                        reboundTop(ball, p);
-                        reboundRight(ball, p);
+                        reboundTop(Car, p);
+                        reboundRight(Car, p);
                         break;
                     case W:
-                        reboundRight(ball, p);
+                        reboundRight(Car, p);
                         break;
                     case NW:
-                        reboundBottom(ball, p);
-                        reboundRight(ball, p);
+                        reboundBottom(Car, p);
+                        reboundRight(Car, p);
                         break;
                     case STILL:
                         break;
@@ -175,8 +161,8 @@ public class GameController {
         }
 
         for (PointArea pointArea : this.game.getPointsAreas()) {
-            if (ball.getBoundingRect().intersect(pointArea.getBoundingRect())) {
-                this.ball.putToStart();
+            if (Car.getBoundingRect().intersect(pointArea.getBoundingRect())) {
+                this.Car.putToStart();
             }
         }
 
@@ -184,7 +170,7 @@ public class GameController {
         this.bonusesToRemove.clear();
 
         for (Bonus bonus : this.game.getBonuses()) {
-            if (ball.getBoundingRect().intersect(bonus.getBoundingRect())) {
+            if (Car.getBoundingRect().intersect(bonus.getBoundingRect())) {
                 Log.v("BONUS", "Hit a bonus of " + bonus.getSeconds());
                 bonusesToRemove.add(bonus);
                 timer.addToTime(bonus.getSeconds());
@@ -192,37 +178,37 @@ public class GameController {
         }
     }
 
-    private void reboundTop(Ball ball, Platform p) {
-        if (Math.abs(this.ball.getY() - p.getBoundingRect().top) < ball.getRadius()) {
-            this.ball.reboundY();
-            this.ball.setY(p.getBoundingRect().top - ball.getRadius());
+    private void reboundTop(Car ball, Platform p) {
+        if (Math.abs(this.Car.getY() - p.getBoundingRect().top) < ball.getRadius()) {
+            this.Car.reboundY();
+            this.Car.setY(p.getBoundingRect().top - ball.getRadius());
         }
     }
 
-    private void reboundBottom(Ball ball, Platform p) {
-        if (Math.abs(this.ball.getY() - p.getBoundingRect().bottom) < ball.getRadius()) {
-            this.ball.reboundY();
-            this.ball.setY(p.getBoundingRect().bottom + ball.getRadius());
+    private void reboundBottom(Car ball, Platform p) {
+        if (Math.abs(this.Car.getY() - p.getBoundingRect().bottom) < ball.getRadius()) {
+            this.Car.reboundY();
+            this.Car.setY(p.getBoundingRect().bottom + ball.getRadius());
         }
     }
 
-    private void reboundLeft(Ball ball, Platform p) {
-        if (Math.abs(this.ball.getX() - p.getBoundingRect().left) < ball.getRadius()) {
-            this.ball.reboundX();
-            this.ball.setX(p.getBoundingRect().left - ball.getRadius());
+    private void reboundLeft(Car ball, Platform p) {
+        if (Math.abs(this.Car.getX() - p.getBoundingRect().left) < ball.getRadius()) {
+            this.Car.reboundX();
+            this.Car.setX(p.getBoundingRect().left - ball.getRadius());
         }
     }
 
-    private void reboundRight(Ball ball, Platform p) {
-        if (Math.abs(this.ball.getX() - p.getBoundingRect().right) < ball.getRadius()) {
-            this.ball.reboundX();
-            this.ball.setX(p.getBoundingRect().right + ball.getRadius());
+    private void reboundRight(Car ball, Platform p) {
+        if (Math.abs(this.Car.getX() - p.getBoundingRect().right) < ball.getRadius()) {
+            this.Car.reboundX();
+            this.Car.setX(p.getBoundingRect().right + ball.getRadius());
         }
     }
 
     public void start() {
         this.game = new Game(this.difficulty, 0, TIMER_SECONDS, this.view.getSurfaceWidth(), this.view.getSurfaceHeight());
-        this.ball = game.getBall();
+        this.Car = game.getCar();
         //this.score = game.getScore();
         //this.time = game.getTime();
         //this.timer = new TimerThread(this.time.getTimeRemaining() * 1000, this);
