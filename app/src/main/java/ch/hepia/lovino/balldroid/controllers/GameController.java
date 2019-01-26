@@ -94,16 +94,16 @@ public class GameController {
         }
         float mean = (float) (sum/audioData.length);
         System.out.println(mean);
-        if(mean < 0.03) {
+        if(mean < 0.04) {
             xAccel = -10;
         }
-        if(mean > 0.03) {
+        if(mean > 0.04) {
             xAccel = 10;
         }
         if(mean > 0.06){
             xAccel = 20;
         }
-        if(mean > 0.15) {
+        if(mean > 0.2) {
             recorder.stop();
 
             if(counter < 3)
@@ -157,8 +157,8 @@ public class GameController {
         this.Car.incrementSpeedX(xAccel);
         this.Car.incrementSpeedY();
         this.Car.updatePosition();
-        if (this.Car.getX() > (this.view.getSurfaceWidth() - this.Car.getRadius())) {
-            this.Car.setX(this.view.getSurfaceWidth() - this.Car.getRadius());
+        if (this.Car.getX() > (this.view.getSurfaceWidth() - this.Car.getRadius() -43)) {
+            this.Car.setX(this.view.getSurfaceWidth() - this.Car.getRadius() -43);
             this.Car.reboundX();
         }
         if (this.Car.getX() < this.Car.getRadius()) {

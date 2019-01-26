@@ -79,7 +79,10 @@ public class Car extends GameObject {
     }
 
     public void putToStart() {
-
+        this.x = INIT_X;
+        this.y = INIT_Y;
+        this.speedX = 0;
+        this.speedY = 0;
     }
 
     public void incrementSpeedX(float toAdd) {
