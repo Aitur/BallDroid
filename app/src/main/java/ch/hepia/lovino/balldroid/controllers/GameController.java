@@ -103,7 +103,24 @@ public class GameController {
             xAccel = 20;
         }
         if(mean > 0.15) {
-            xAccel = 0;
+            xAccel = 30;
+            //System.out.println("Das ist zu laut");
+
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog alert;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Zu laut");
+                    builder.setMessage("Bitte nicht Stressen");
+                    builder.setCancelable(false);
+                    alert = builder.create();
+                    alert.show();
+
+
+                    alert.dismiss();
+                }
+            });
         }
     }
 

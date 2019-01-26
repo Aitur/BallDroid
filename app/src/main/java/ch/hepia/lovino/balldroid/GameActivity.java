@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -14,7 +15,7 @@ import ch.hepia.lovino.balldroid.models.Ball;
 import ch.hepia.lovino.balldroid.models.Car;
 import ch.hepia.lovino.balldroid.models.DifficultyLevel;
 
-public class GameActivity extends Activity {
+public class GameActivity extends AppCompatActivity {
     private SensorManager sensorManager = null;
     private Sensor accelerometer = null;
     private final static String LOG_TAG = "GAME ACTIVITY";
