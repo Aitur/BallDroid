@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import ch.hepia.lovino.balldroid.controllers.GameController;
 import ch.hepia.lovino.balldroid.models.Ball;
+import ch.hepia.lovino.balldroid.models.Car;
 import ch.hepia.lovino.balldroid.models.DifficultyLevel;
 
 public class GameActivity extends Activity {
@@ -18,7 +19,7 @@ public class GameActivity extends Activity {
     private Sensor accelerometer = null;
     private final static String LOG_TAG = "GAME ACTIVITY";
     private GameController controller;
-    private Ball ball;
+    private Car car;
     private DifficultyLevel difficulty;
 
     @Override

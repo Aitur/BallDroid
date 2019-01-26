@@ -8,6 +8,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -42,6 +46,15 @@ public class GameController {
     private boolean paused = true;
     private TimerThread timer;
     private ArrayList<Bonus> bonusesToRemove;
+    int audioSource = MediaRecorder.AudioSource.MIC;
+    int sampleRateInHz = 44100;
+    int channelConfig = AudioFormat.CHANNEL_IN_MONO;
+    int audioFormat = AudioFormat.ENCODING_PCM_FLOAT;
+
+    int minBufferSize = AudioRecord.getMinBufferSize(sampleRateInHz,channelConfig,audioFormat);
+
+    AudioRecord recorder = new AudioRecord(audioSource, sampleRateInHz, channelConfig,
+            audioFormat, minBufferSize);
     private final SensorEventListener sensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -65,11 +78,53 @@ public class GameController {
         }
         this.bonusesToRemove = new ArrayList<>();
         this.timer = new TimerThread(10 * 1000, this);
+        Log.i("message","ooooooohhhuuuu");
+    }
+
+    public void updateOnVoice(){
+        float[] audioData = new float[512];
+
+        recorder.read(audioData,0,512,AudioRecord.READ_BLOCKING);
+        double sum = 0;
+        for(int i = 0; i < audioData.length; i++){
+            sum += Math.abs(audioData[i]);
+            //Log.i("message",""+audioData[i]);
+        }
+        float mean = (float) (sum/audioData.length);
+        System.out.println(mean);
+        if(mean < 0.03) {
+            xAccel = -15;
+        }
+        if(mean > 0.03) {
+            xAccel = 10;
+        }
+        if(mean > 0.06){
+            xAccel = 20;
+        }
+        if(mean > 0.15){
+            xAccel = 30;
+            //System.out.println("Das ist zu laut");
+
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog alert;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Zu laut");
+                    builder.setMessage("Bitte nicht Stressen");
+                    builder.setCancelable(false);
+                    alert = builder.create();
+                    alert.show();
+                    alert.dismiss();
+                }
+            });
+        }
     }
 
     public void update() {
         if (paused) return;
-        this.time.setTimeRemaining((int) timer.getRemainingTime() / 1000);
+        //this.time.setTimeRemaining((int) timer.getRemainingTime() / 1000);
+        updateOnVoice();
         this.ball.incrementSpeedX(xAccel);
         this.ball.incrementSpeedY();
         this.ball.updatePosition();
@@ -121,7 +176,6 @@ public class GameController {
 
         for (PointArea pointArea : this.game.getPointsAreas()) {
             if (ball.getBoundingRect().intersect(pointArea.getBoundingRect())) {
-                score.increment(pointArea.getPoints());
                 this.ball.putToStart();
             }
         }
@@ -169,10 +223,11 @@ public class GameController {
     public void start() {
         this.game = new Game(this.difficulty, 0, TIMER_SECONDS, this.view.getSurfaceWidth(), this.view.getSurfaceHeight());
         this.ball = game.getBall();
-        this.score = game.getScore();
-        this.time = game.getTime();
-        this.timer = new TimerThread(this.time.getTimeRemaining() * 1000, this);
-        this.timer.start();
+        //this.score = game.getScore();
+        //this.time = game.getTime();
+        //this.timer = new TimerThread(this.time.getTimeRemaining() * 1000, this);
+        //this.timer.start();
+        recorder.startRecording();
     }
 
     public Game getGame() {
@@ -180,7 +235,7 @@ public class GameController {
     }
 
     public void resumeGame() {
-        this.sensorManager.registerListener(this.sensorListener, this.accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        //this.sensorManager.registerListener(this.sensorListener, this.accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         paused = false;
         if (this.time != null) {
             this.timer = new TimerThread(this.time.getTimeRemaining() * 1000, this);
@@ -218,6 +273,7 @@ public class GameController {
         if (score.getScore() > 0)
             saveScore();
         context.showEndOfGame(score.getScore());
+        recorder.stop();
     }
 
     private void saveScore() {

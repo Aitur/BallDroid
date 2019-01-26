@@ -6,17 +6,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class PointArea extends StaticGameObject {
-    private final int points;
+    private final String points;
     private static final int TEXT_COLOR = Color.BLACK;
-    private static final int BG_COLOR = Color.YELLOW;
+    private static final int BG_COLOR = Color.WHITE;
 
 
-    public PointArea(float x, float y, float width, float height, int points) {
+    public PointArea(float x, float y, float width, float height, String points) {
         super(x, y, width, height);
         this.points = points;
     }
 
-    public int getPoints() {
+    public String getPoints() {
         return points;
     }
 
