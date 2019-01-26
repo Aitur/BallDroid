@@ -1,6 +1,5 @@
 package ch.hepia.lovino.balldroid;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -11,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import ch.hepia.lovino.balldroid.controllers.GameController;
-import ch.hepia.lovino.balldroid.models.Ball;
 import ch.hepia.lovino.balldroid.models.Car;
 import ch.hepia.lovino.balldroid.models.DifficultyLevel;
 

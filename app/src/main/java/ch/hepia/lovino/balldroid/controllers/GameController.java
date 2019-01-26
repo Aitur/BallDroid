@@ -16,10 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import ch.hepia.lovino.balldroid.GameActivity;
-import ch.hepia.lovino.balldroid.models.Ball;
 import ch.hepia.lovino.balldroid.models.BallDirection;
 import ch.hepia.lovino.balldroid.models.Bonus;
 import ch.hepia.lovino.balldroid.models.Car;
@@ -97,7 +95,7 @@ public class GameController {
         float mean = (float) (sum/audioData.length);
         System.out.println(mean);
         if(mean < 0.03) {
-            xAccel = -15;
+            xAccel = -10;
         }
         if(mean > 0.03) {
             xAccel = 10;

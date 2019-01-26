@@ -61,6 +61,11 @@ public class Car extends GameObject {
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(BALL_COLOR);
         canvas.drawCircle(x, y, radius, paint);
+        canvas.drawCircle(x+50, y, radius, paint);
+        canvas.drawRect(x-radius-10,y-45,x+radius+60,y-radius, paint);
+        canvas.drawRect(x-radius+15,y-45,x+radius+25,y-radius-45, paint);
+        paint.setColor(Color.GRAY);
+        canvas.drawRect(x-radius+17,y-45,x+radius+23,y-radius-43, paint);
     }
 
     public void reboundX() {
