@@ -33,8 +33,8 @@ public class GameActivity extends AppCompatActivity {
 
     public void showEndOfGame(int score) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Game is over");
-        builder.setMessage("Your score is " + score + " points.");
+        builder.setTitle("Win!");
+        builder.setMessage("Herzlichen Glückwunsch!");
         builder.setCancelable(false);
         builder.setPositiveButton("View high scores", (dialogInterface, i) -> {
             startActivity(new Intent(this, HighScoreActivity.class));

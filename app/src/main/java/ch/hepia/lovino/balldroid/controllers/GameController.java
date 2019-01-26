@@ -206,6 +206,7 @@ public class GameController {
         for (PointArea pointArea : this.game.getPointsAreas()) {
             if (Car.getBoundingRect().intersect(pointArea.getBoundingRect())) {
                 this.Car.putToStart();
+                context.showEndOfGame(score.getScore());
             }
         }
 
